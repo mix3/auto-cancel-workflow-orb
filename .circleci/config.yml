@@ -1,0 +1,32 @@
+version: 2.1
+
+orbs:
+  auto-cancel:
+    jobs:
+      auto-cancel:
+        parameters:
+          wait_seconds:
+            default:     3600
+            description: wait time
+            type:        integer
+        steps:
+          - run:
+              name: auto-cancel
+              command: |
+                echo TODO
+jobs:
+  done:
+    steps:
+      - run: echo done
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - auto-cancel:
+          wait_seconds: 180
+      - approve:
+          type: approval
+      - weit:
+          requires:
+            - approve
