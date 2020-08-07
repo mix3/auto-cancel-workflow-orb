@@ -2,20 +2,27 @@ version: 2.1
 
 orbs:
   auto-cancel:
+    executors:
+      default:
+        docker:
+          - image: circleci/buildpack-deps:latest
     jobs:
       auto-cancel:
-        parameters:
-          wait_seconds:
-            default:     3600
-            description: wait time
-            type:        integer
+        executor: default
         steps:
           - run:
               name: auto-cancel
               command: |
                 echo TODO
+
+executors:
+  default:
+    docker:
+      - image: circleci/buildpack-deps:latest
+
 jobs:
   done:
+    executor: default
     steps:
       - run: echo done
 
@@ -23,10 +30,9 @@ workflows:
   version: 2
   test:
     jobs:
-      - auto-cancel:
-          wait_seconds: 180
+      - auto-cancel/auto-cancel
       - approve:
           type: approval
-      - weit:
+      - done:
           requires:
             - approve
