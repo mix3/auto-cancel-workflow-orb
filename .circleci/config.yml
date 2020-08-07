@@ -1,24 +1,24 @@
 version: 2.1
 
-orbs:
-  auto-cancel:
-    executors:
-      default:
-        docker:
-          - image: circleci/buildpack-deps:latest
-    jobs:
-      auto-cancel:
-        executor: default
-        steps:
-          - run:
-              name: auto-cancel
-              command: |
-                sleep 120
-                curl \
-                  -X POST \
-                  -H "Accept: application/json" \
-                  -H "Circle-Token: $CIRCLECI_API_TOKEN" \
-                  https://circleci.com/api/v2/workflow/${CIRCLE_WORKFLOW_ID}/cancel
+#orbs:
+#  auto-cancel:
+#    executors:
+#      default:
+#        docker:
+#          - image: circleci/buildpack-deps:latest
+#    jobs:
+#      auto-cancel:
+#        executor: default
+#        steps:
+#          - run:
+#              name: auto-cancel
+#              command: |
+#                sleep 120
+#                curl \
+#                  -X POST \
+#                  -H "Accept: application/json" \
+#                  -H "Circle-Token: $CIRCLECI_API_TOKEN" \
+#                  https://circleci.com/api/v2/workflow/${CIRCLE_WORKFLOW_ID}/cancel
 
 executors:
   default:
@@ -30,12 +30,24 @@ jobs:
     executor: default
     steps:
       - run: echo done
+  auto-cancel:
+    executor: default
+    steps:
+      - run:
+          name: auto-cancel
+          command: |
+            sleep 120
+            curl \
+              -X POST \
+              -H "Accept: application/json" \
+              -H "Circle-Token: $CIRCLECI_API_TOKEN" \
+              https://circleci.com/api/v2/workflow/${CIRCLE_WORKFLOW_ID}/cancel
 
 workflows:
   version: 2
   test:
     jobs:
-      - auto-cancel/auto-cancel
+      - auto-cancel
       - approve:
           type: approval
       - done:
