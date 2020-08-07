@@ -13,7 +13,12 @@ orbs:
           - run:
               name: auto-cancel
               command: |
-                echo TODO
+                sleep 120
+                curl \
+                  -X POST \
+                  -H "Accept: application/json" \
+                  -H "Circle-Token: $CIRCLECI_API_TOKEN" \
+                  https://circleci.com/api/v2/workflow/${CIRCLE_WORKFLOW_ID}/cancel
 
 executors:
   default:
